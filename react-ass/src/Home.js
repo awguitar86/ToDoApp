@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import {connect} from 'react-redux';
-import {getTasks, deleteTask, addTask, completeTask, setTodo} from './reducer'
+import {getTodo, deleteTodo, addTodo, completeTodo, setTodo} from './reducer'
 
 
 class List extends Component{
@@ -16,7 +16,7 @@ class List extends Component{
     }
 
     componentDidMount(){
-        this.props.getTasks()
+        this.props.getTodo()
     }
 
     handleTerm(str){
@@ -25,21 +25,21 @@ class List extends Component{
         })
     }
 
-    deleteTask(i){
-        this.props.deleteTask(i);
+    deleteTodo(i){
+        this.props.deleteTodo(i);
     }
 
-    addTask(){
+    addTodo(){
         if(this.state.term){
-        this.props.addTask(this.state.term)
+        this.props.addTodo(this.state.term)
         this.setState({
             term: ""
         })
         }
     }
 
-    completeTask(i){
-        this.props.completeTask(i);
+    completeTodo(i){
+        this.props.completeTodo(i);
     }
 
     setTodo(i){
@@ -58,11 +58,11 @@ class List extends Component{
         let todocards = "loading"
         this.props.todos ? todocards = this.props.todos.map( (v, i, a) => {
             return (
-                <div key={i} className={ v.completed ? "clistitem" : "listitem"}>
-                    <a href={`/#/task/${i}`} ><h2 className="ltitle" onClick={() => {this.setTodo(i)}}>{v.title}</h2></a>
-                    <div className="lleft">
-                        {v.completed ? null : <button className="lbutton" onClick={()=> this.completeTask(v.id)}>{v.completed ? "Completed" : "Complete?"}</button>}
-                        <button className="lx" onClick={() => this.deleteTask(v.id)}>X</button>
+                <div key={i} className={ v.completed ? "completed-todo-item" : "todo-item"}>
+                    <a href={`/#/todoitem/${i}`} ><h3 className="todo-item-title" onClick={() => {this.setTodo(i)}}>{v.title}</h3></a>
+                    <div className="todo-complete-delete">
+                        {v.completed ? null : <button className="todo-complete-button" onClick={()=> this.completeTodo(v.id)}>{v.completed ? "Completed" : "Complete?"}</button>}
+                        <button className="delete-todo" onClick={() => this.deleteTodo(v.id)}>X</button>
                     </div>
                 </div>
             )
@@ -71,15 +71,15 @@ class List extends Component{
         console.log(this.props.todos);
 
         return(
-            <div className="papa">
+            <div className="body">
                 <div className="header">
-                    <h1 className={this.state.showtodo ? "htitle" : "nohtitle"} onClick={ this.showtodo}>TO-DO:</h1>
-                    <input className="hinput" value={this.state.term} style={{marginLeft: '20px'}} defaltvalue="" onChange={e => {
+                    <h1 className={this.state.showtodo ? "title-on" : "title-off"} onClick={ this.showtodo}>To-Do:</h1>
+                    <input className="new-todo-input" value={this.state.term} style={{marginLeft: '20px'}} defaltvalue="" onChange={e => {
                                     this.handleTerm(e.target.value);
                                     }} />
-                    <button className="hbutton" onClick={()=> this.addTask()}>Add new task</button>
+                    <button className="add-new-todo" onClick={()=> this.addTodo()}>Add new todo</button>
                 </div>
-                <div className="listholder">
+                <div className="todo-items">
                     {todocards}
                 </div>
             </div>
@@ -94,4 +94,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, {getTasks, deleteTask, addTask, completeTask, setTodo})(List)
+export default connect(mapStateToProps, {getTodo, deleteTodo, addTodo, completeTodo, setTodo})(List)
